@@ -1,0 +1,32 @@
+# use this to iterate on changes to config without rebuilding the entire
+# image from scratch; ensure to clean the right stamps/folders to correctly
+# trigger rebuild with Buildroot
+
+FROM olel/rv1106-buildroot-base:latest AS local
+
+# copy newest version of local files
+WORKDIR /root/rv1106
+COPY board/ board/
+COPY configs/ configs/
+COPY patches/ patches/
+COPY package/ package/
+COPY \
+    Config.in \
+    external.desc \
+    external.mk \
+    ./
+
+# reset Buildroot config and trigger Linux kernel rebuild
+WORKDIR /root/buildroot
+RUN BR2_EXTERNAL=/root/rv1106 make rv1106_defconfig
+
+# TODO: check paths
+# RUN cd output/build/linux-custom/ && rm .stamp_built .stamp_*_installed
+# RUN cd output/build/linux-firmware-xyz/ && rm .stamp_built .stamp_*_installed
+
+# re-run build
+RUN make
+
+# expose built image files in standalone root folder
+FROM scratch AS localout
+COPY --from=local /root/buildroot/output/images/ .
