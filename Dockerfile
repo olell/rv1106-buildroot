@@ -61,7 +61,8 @@ COPY --from=toolchain /root/rockchip_toolchain/toolchain.tar.gz /root/
 RUN tar -xf /root/toolchain.tar.gz -C . && rm toolchain.tar.gz
 # toolchain is now located @ /root/arm-rockchip830-linux-uclibcgnueabihf
 COPY --from=toolchain /root/rkbin.tar.gz /root/
-RUN tar -xf /root/rkbin.tar.gz -C . && rm rkbin.tar.gz
+RUN mkdir -p /root/rkbin
+RUN tar -xf /root/rkbin.tar.gz -C /root/rkbin && rm rkbin.tar.gz
 # rkbin is now located @ /root/rkbin
 
 # copy over the main config
@@ -82,9 +83,9 @@ RUN BR2_EXTERNAL=/root/rv1106 make rv1106_defconfig
 
 # prepare for builds (broken out separately to cache more granularly, especially Linux source fetch)
 #RUN make linux-source
-RUN make uboot-source
+#RUN make uboot-source
 
 # run the main build command
-RUN make
+#RUN make
 
 CMD ["tail", "-f", "/dev/null"]
