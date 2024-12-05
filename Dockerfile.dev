@@ -30,3 +30,5 @@ RUN make
 # expose built image files in standalone root folder
 FROM scratch AS localout
 COPY --from=local /root/buildroot/output/images/ .
+
+CMD ["tail", "-f", "/dev/null"]

@@ -50,12 +50,19 @@ RUN mkdir /root/rockchip_toolchain/toolchain/
 RUN bash ./env_install_toolchain.sh /root/rockchip_toolchain/toolchain/
 RUN tar -zcvf /root/rockchip_toolchain/toolchain.tar.gz -C /root/rockchip_toolchain/toolchain .
 
+WORKDIR /root/
+RUN git clone https://github.com/rockchip-linux/rkbin
+RUN tar -zcvf /root/rkbin.tar.gz -C /root/rkbin/ .
+
 FROM base AS main
 
 WORKDIR /root
 COPY --from=toolchain /root/rockchip_toolchain/toolchain.tar.gz /root/
 RUN tar -xf /root/toolchain.tar.gz -C . && rm toolchain.tar.gz
 # toolchain is now located @ /root/arm-rockchip830-linux-uclibcgnueabihf
+COPY --from=toolchain /root/rkbin.tar.gz /root/
+RUN tar -xf /root/rkbin.tar.gz -C . && rm rkbin.tar.gz
+# rkbin is now located @ /root/rkbin
 
 # copy over the main config
 WORKDIR /root/rv1106
