@@ -50,12 +50,19 @@ RUN mkdir /root/rockchip_toolchain/toolchain/
 RUN bash ./env_install_toolchain.sh /root/rockchip_toolchain/toolchain/
 RUN tar -zcvf /root/rockchip_toolchain/toolchain.tar.gz -C /root/rockchip_toolchain/toolchain .
 
+WORKDIR /root/
+RUN git clone https://github.com/rockchip-linux/rkbin
+RUN tar -zcvf /root/rkbin.tar.gz -C /root/rkbin/ .
+
 FROM base AS main
 
 WORKDIR /root
 COPY --from=toolchain /root/rockchip_toolchain/toolchain.tar.gz /root/
 RUN tar -xf /root/toolchain.tar.gz -C . && rm toolchain.tar.gz
 # toolchain is now located @ /root/arm-rockchip830-linux-uclibcgnueabihf
+COPY --from=toolchain /root/rkbin.tar.gz /root/
+RUN tar -xf /root/rkbin.tar.gz -C . && rm rkbin.tar.gz
+# rkbin is now located @ /root/rkbin
 
 # copy over the main config
 WORKDIR /root/rv1106
@@ -74,8 +81,8 @@ WORKDIR /root/buildroot
 RUN BR2_EXTERNAL=/root/rv1106 make rv1106_defconfig
 
 # prepare for builds (broken out separately to cache more granularly, especially Linux source fetch)
-RUN make linux-source
-#RUN make uboot-source
+#RUN make linux-source
+RUN make uboot-source
 
 # run the main build command
 RUN make

@@ -1,0 +1,17 @@
+diff --git a/arch/arm/mach-rockchip/rv1106/rv1106.c b/arch/arm/mach-rockchip/rv1106/rv1106.c
+index b5abd2955..b94842c70 100644
+--- a/arch/arm/mach-rockchip/rv1106/rv1106.c
++++ b/arch/arm/mach-rockchip/rv1106/rv1106.c
+@@ -654,3 +654,12 @@ int rk_board_fdt_fixup(const void *blob)
+ 
+ 	return 0;
+ }
++
++
++#if defined(CONFIG_DISPLAY_CPUINFO)
++int print_cpuinfo(void)
++{
++	printf("CPU: RV1106\n");
++	return 0;
++}
++#endif

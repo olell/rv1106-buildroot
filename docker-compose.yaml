@@ -1,0 +1,16 @@
+services:
+  buildroot:
+    image: olel/rv1106-buildroot-dev
+    volumes:
+      - ./board:/root/rv1106/board
+      - ./configs:/root/rv1106/configs
+      - ./patches:/root/rv1106/patches
+      - ./package:/root/rv1106/package
+      - ./Config.in:/root/rv1106/Config.in
+      - ./external.desc:/root/rv1106/external.desc
+      - ./external.mk:/root/rv1106/external.mk
+      - ./buildscript.sh:/root/rv1106/buildscript.sh
+    container_name:
+      rv1106-buildroot-compose
+    ports:
+      - "8080:8088"

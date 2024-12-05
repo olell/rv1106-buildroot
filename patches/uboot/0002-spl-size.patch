@@ -1,0 +1,13 @@
+diff --git a/include/configs/rv1106_common.h b/include/configs/rv1106_common.h
+index dc927a8..2663de2 100644
+--- a/include/configs/rv1106_common.h
++++ b/include/configs/rv1106_common.h
+@@ -35,7 +35,7 @@
+ /* SPL */
+ #define CONFIG_SPL_FRAMEWORK
+ #define CONFIG_SPL_TEXT_BASE		0x00000000
+-#define CONFIG_SPL_MAX_SIZE		0x28000
++#define CONFIG_SPL_MAX_SIZE             0x70000
+ #define CONFIG_SPL_BSS_START_ADDR	0x001fe000
+ #define CONFIG_SPL_BSS_MAX_SIZE		0x20000
+ #define CONFIG_SPL_STACK		0x001fe000
