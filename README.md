@@ -1,7 +1,7 @@
 # RV1106 buildroot
 
 > [!WARNING]  
-> ⚠️ This is still very much work in progress and not suitable for being used in dev or production environments ⚠️
+> This is still very much work in progress and not suitable for being used in dev or production environments
 
 ## Build the docker image
 
