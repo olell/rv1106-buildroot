@@ -1,6 +1,6 @@
 services:
   buildroot:
-    image: olel/rv1106-buildroot-dev
+    image: olel/rv1106-buildroot-base
     volumes:
       - ./board:/root/rv1106/board
       - ./configs:/root/rv1106/configs
