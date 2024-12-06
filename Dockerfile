@@ -82,10 +82,10 @@ WORKDIR /root/buildroot
 RUN BR2_EXTERNAL=/root/rv1106 make rv1106_defconfig
 
 # prepare for builds (broken out separately to cache more granularly, especially Linux source fetch)
-#RUN make linux-source
-#RUN make uboot-source
+RUN make linux-source
+RUN make uboot-source
 
 # run the main build command
-#RUN make
+RUN make
 
 CMD ["tail", "-f", "/dev/null"]
