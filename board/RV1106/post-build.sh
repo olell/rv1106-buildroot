@@ -35,4 +35,12 @@ cd ${UBOOT_TOOLS_DIR}
     -d "${RKBIN_PATH}/bin/rv11/rv1106_ddr_924MHz_v1.15.bin:${IMAGES_DIR}/u-boot-spl.bin" \
     "${IMAGES_DIR}/idblock.img"
 
+#
+# Adding getty on serial gadget port to /etc/inittab to start it on system startup
+#
+
+grep -q "GADGET_SERIAL" "${TARGET_DIR}/etc/inittab" \
+|| echo '/dev/ttyGS0::respawn:/sbin/getty -L  /dev/ttyGS0 0 vt100 # GADGET_SERIAL' >> "${TARGET_DIR}/etc/inittab"
+
+
 exit $?

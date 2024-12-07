@@ -35,7 +35,8 @@ RUN apt-get install -qy \
     texinfo \
     unzip \
     wget \
-    whiptail
+    whiptail \
+    python-is-python3
 
 WORKDIR /root/buildroot
 RUN wget -qO- https://buildroot.org/downloads/buildroot-${BUILDROOT_RELEASE}.tar.gz | tar --strip-components=1 -xz 
