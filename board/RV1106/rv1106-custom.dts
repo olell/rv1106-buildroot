@@ -36,3 +36,21 @@
 &sdmmc {
         vmmc-supply = <&vcc3v3_sd>;
 };
+
+&u2phy {
+	status = "okay";
+};
+
+&u2phy_otg {
+	rockchip,dis-u2-susphy;
+	status = "okay";
+};
+
+&usbdrd {
+	status = "okay";
+};
+
+&usbdrd_dwc3 {
+	status = "okay";
+	dr_mode = "peripheral";
+};
