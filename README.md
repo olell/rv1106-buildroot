@@ -10,7 +10,7 @@ This repository aims to provide a Buildroot BSP for the Rockchip RV1106 system o
 - [x] Run u-boot SPL from rockchip source
 - [x] Run u-boot from rockchip source
 - [x] Boot linux 5.10 kernel from rockchip source
-- [ ] Automatically build root fs
+- [x] Automatically build root fs
 - [ ] Check device drivers (Ethernet, SPI, I2C, I2C, etc.)
 - [ ] Check integrated MCU support + Mailbox system
 - [ ] Update u-boot (proper & spl) to mainline version
