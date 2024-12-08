@@ -23,7 +23,7 @@ index dc927a8..7922f7b 100644
 -	"boot_android ${devtype} ${devnum};"
  #endif
  
-+#define RKIMG_BOOTCOMMAND "fatload mmc 1:5 0x8C00000 rv1106-custom.dtb;fatload mmc 1:5 0x8000800 zImage;bootz 0x8000800 - 0x8C00000"
++#define RKIMG_BOOTCOMMAND "fatload mmc 1:5 0x808000 rv1106-custom.dtb;fatload mmc 1:5 0x818000 zImage;bootz 0x818000 - 0x808000"
 +
  /* Update define for tiny image */
  #ifdef CONFIG_ROCKCHIP_IMAGE_TINY
