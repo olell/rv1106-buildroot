@@ -1,0 +1,4 @@
+#! /bin/sh
+
+modprobe g_cdc
+ifup usb0
