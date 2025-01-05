@@ -1,6 +1,6 @@
 FROM ubuntu:22.04 AS base
 
-ARG BUILDROOT_RELEASE=2024.02.8
+ARG BUILDROOT_RELEASE=2024.02.9
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -43,13 +43,22 @@ RUN wget -qO- https://buildroot.org/downloads/buildroot-${BUILDROOT_RELEASE}.tar
 
 FROM base AS toolchain
 
-## todo: find cleaner solution to get the toolchain
-WORKDIR /root/rockchip_toolchain
-RUN git clone https://github.com/deerpi/arm-rockchip830-linux-uclibcgnueabihf
-WORKDIR /root/rockchip_toolchain/arm-rockchip830-linux-uclibcgnueabihf
-RUN mkdir /root/rockchip_toolchain/toolchain/
-RUN bash ./env_install_toolchain.sh /root/rockchip_toolchain/toolchain/
-RUN tar -zcvf /root/rockchip_toolchain/toolchain.tar.gz -C /root/rockchip_toolchain/toolchain .
+# configure a skeleton setup for `make sdk` only at first
+# (we take special care to not include other unrelated config files)
+WORKDIR /root/rv1106-sdk
+RUN echo 'name: RV1106_SDK' >> external.desc
+RUN echo 'desc: RV1106 SDK only' >> external.desc
+RUN touch external.mk Config.in
+COPY configs/rv1106_sdk_defconfig configs/
+
+# compile the SDK (this takes a while!)
+WORKDIR /root/buildroot
+RUN BR2_EXTERNAL=/root/rv1106-sdk make rv1106_sdk_defconfig
+
+RUN make sdk
+RUN ls -la /root/buildroot/output/images
+
+FROM base AS rkbin
 
 WORKDIR /root/
 RUN git clone https://github.com/rockchip-linux/rkbin
@@ -58,10 +67,11 @@ RUN tar -zcvf /root/rkbin.tar.gz -C /root/rkbin/ .
 FROM base AS main
 
 WORKDIR /root
-COPY --from=toolchain /root/rockchip_toolchain/toolchain.tar.gz /root/
-RUN tar -xf /root/toolchain.tar.gz -C . && rm toolchain.tar.gz
-# toolchain is now located @ /root/arm-rockchip830-linux-uclibcgnueabihf
-COPY --from=toolchain /root/rkbin.tar.gz /root/
+
+COPY --from=toolchain /root/buildroot/output/images/arm-buildroot-linux-gnueabihf_sdk-buildroot.tar.gz /root/
+RUN ls -l /root/
+
+COPY --from=rkbin /root/rkbin.tar.gz /root/
 RUN mkdir -p /root/rkbin
 RUN tar -xf /root/rkbin.tar.gz -C /root/rkbin && rm rkbin.tar.gz
 # rkbin is now located @ /root/rkbin
@@ -83,7 +93,7 @@ WORKDIR /root/buildroot
 RUN BR2_EXTERNAL=/root/rv1106 make rv1106_defconfig
 
 # prepare for builds (broken out separately to cache more granularly, especially Linux source fetch)
-RUN make linux-source
+#RUN make linux-source
 RUN make uboot-source
 
 # run the main build command
