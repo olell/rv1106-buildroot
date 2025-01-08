@@ -9,7 +9,7 @@ This repository aims to provide a Buildroot BSP for the Rockchip RV1106 system o
 
 - [x] Run u-boot SPL from rockchip source
 - [x] Run u-boot from rockchip source
-- [x] Boot linux 5.10 kernel from rockchip source
+- [x] Boot linux 6.1 kernel from armbian source
 - [x] Automatically build root fs
 - [ ] Check device drivers (Ethernet, SPI, I2C, I2C, etc.)
 - [ ] Check integrated MCU support + Mailbox system
@@ -24,13 +24,13 @@ This repository contains two github actions (`.github/workflows/`) which automat
 ### Build the base image
 
 ```bash
-docker buildx build --platform linux/amd64 -f Dockerfile -t olel/rv1106-buildroot-base:latest .
+docker build -f Dockerfile -t olel/rv1106-buildroot-base:latest .
 ```
 
 ### Build the iterating image
 
 ```bash
-docker buildx build --platform linux/amd64 -f Dockerfile.dev --output type=tar,dest=- . | tar x -C dist
+docker build -f Dockerfile.dev --output type=tar,dest=- . | tar x -C dist
 ```
 
 This will output the build images to a directory called `dist/`
