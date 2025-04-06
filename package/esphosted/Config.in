@@ -1,0 +1,5 @@
+config BR2_PACKAGE_ESPHOSTED
+	bool "esphosted"
+	depends on BR2_LINUX_KERNEL
+	help
+		esphosted

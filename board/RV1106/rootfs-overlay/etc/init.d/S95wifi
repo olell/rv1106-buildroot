@@ -1,0 +1,5 @@
+#! /bin/sh
+
+modprobe esp32_sdio resetpin=123
+
+echo "ESP kmod loaded" > /dev/kmsg

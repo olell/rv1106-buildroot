@@ -1,0 +1,25 @@
+#!/bin/bash
+PINS=(128 135 136)
+INTERVAL=0.1
+LOOPS=3
+
+for PIN in "${PINS[@]}"; do
+    echo "$PIN" > /sys/class/gpio/export
+    echo "out" > /sys/class/gpio/gpio$PIN/direction
+done
+
+for ((i=0; i<LOOPS; i++)); do
+    for PIN in "${PINS[@]}"; do
+        echo 1 > /sys/class/gpio/gpio$PIN/value
+        sleep $INTERVAL
+        echo 0 > /sys/class/gpio/gpio$PIN/value
+    done
+done
+
+echo 1 > /sys/class/gpio/gpio135/value
+
+for PIN in "${PINS[@]}"; do
+    echo "$PIN" > /sys/class/gpio/unexport
+done
+
+echo "LED rotation complete."

@@ -1,0 +1,1 @@
+source "$BR2_EXTERNAL_RV1106_PATH/package/esphosted/Config.in"

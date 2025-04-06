@@ -5,8 +5,11 @@
 
 /dts-v1/;
 
-#include "rv1106.dtsi"
+// https://github.com/armbian/linux-rockchip/blob/rk-6.1-rkr5/arch/arm/boot/dts/rv1106.dtsi
+#include "rv1106g3.dtsi"
+// https://github.com/armbian/linux-rockchip/blob/rk-6.1-rkr5/arch/arm/boot/dts/rv1106-evb.dtsi
 #include "rv1106-evb.dtsi"
+// https://github.com/armbian/linux-rockchip/blob/rk-6.1-rkr5/arch/arm/boot/dts/rv1106-evb.dtsi
 #include "rv1106-ipc.dtsi"
 
 / {
@@ -31,6 +34,12 @@
                         rockchip,pins = <0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
                 };
         };
+
+	//sdio {
+        //        sdio_reset: sdio-reset {
+	//	        rockchip,pins = <3 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
+        //        };
+	//};
 };
 
 &sdmmc {
@@ -53,4 +62,23 @@
 &usbdrd_dwc3 {
 	status = "okay";
 	dr_mode = "peripheral";
+};
+
+&uart5 {
+        status = "okay";
+        pinctrl-names = "default";
+        pinctrl-0 = <&uart5m2_xfer &uart5m2_ctsn &uart5m2_rtsn>;
+};
+
+&sdio {
+	max-frequency = <20000000>;
+	bus-width = <4>;
+        broken-cd;
+	pinctrl-names = "default";
+	pinctrl-0 = <&sdmmc1m1_cmd &sdmmc1m1_clk &sdmmc1m1_bus4>;
+	status = "okay";
+};
+
+&gmac {
+        status = "okay";
 };

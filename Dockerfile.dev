@@ -2,7 +2,7 @@
 # image from scratch; ensure to clean the right stamps/folders to correctly
 # trigger rebuild with Buildroot
 
-FROM olel/rv1106-buildroot-base:latest AS local
+FROM olel/rv1106-buildroot-dev:latest AS local
 
 # copy newest version of local files
 WORKDIR /root/rv1106
