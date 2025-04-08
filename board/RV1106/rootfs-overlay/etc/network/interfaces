@@ -1,6 +1,9 @@
 auto lo
 iface lo inet loopback
 
+auto eth0
+iface eth0 inet dhcp
+
 auto usb0
 iface usb0 inet static
     address 10.0.0.20
