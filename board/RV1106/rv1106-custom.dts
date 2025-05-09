@@ -5,45 +5,120 @@
 
 /dts-v1/;
 
-// https://github.com/armbian/linux-rockchip/blob/rk-6.1-rkr5/arch/arm/boot/dts/rv1106.dtsi
 #include "rv1106g3.dtsi"
-// https://github.com/armbian/linux-rockchip/blob/rk-6.1-rkr5/arch/arm/boot/dts/rv1106-evb.dtsi
-#include "rv1106-evb.dtsi"
-// https://github.com/armbian/linux-rockchip/blob/rk-6.1-rkr5/arch/arm/boot/dts/rv1106-evb.dtsi
-#include "rv1106-ipc.dtsi"
+#include "rv1106-pinctrl.dtsi"
 
 / {
-        model = "Rockchip RV1106G IPC38 V10 Board";
-        compatible = "rockchip,rv1106g-38x38-ipc-v10", "rockchip,rv1106";
+        model = "SoundCube Digital Board";
+        compatible = "soundcube,RV1106-dboard", "rockchip,rv1106";
 
-        vcc3v3_sd: vcc3v3-sd {
-                compatible = "regulator-fixed";
-                gpio = <&gpio0 RK_PA1 GPIO_ACTIVE_LOW>;
-                regulator-name = "vcc3v3_sd";
-                regulator-min-microvolt = <3300000>;
-                regulator-max-microvolt = <3300000>;
-                pinctrl-names = "default";
-                pinctrl-0 = <&sdmmc_pwren>;
-        };
+        chosen {
+		bootargs = "earlycon=uart8250,mmio32,0xff4c0000 console=ttyFIQ0 rootwait coherent_pool=0";
+	};
+
+
+	vcc_1v8: vcc-1v8 {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc_1v8";
+		regulator-always-on;
+		regulator-boot-on;
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+	};
+
+	vcc_3v3: vcc-3v3 {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc_3v3";
+		regulator-always-on;
+		regulator-boot-on;
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+	};
+
+	vdd_arm: vdd-arm {
+		compatible = "regulator-fixed";
+		regulator-name = "vdd_arm";
+		regulator-always-on;
+		regulator-boot-on;
+		regulator-min-microvolt = <900000>;
+		regulator-max-microvolt = <900000>;
+	};
+
+	vcc3v3_sd: vcc3v3-sd {
+			compatible = "regulator-fixed";
+			gpio = <&gpio3 RK_PC3 GPIO_ACTIVE_LOW>;
+			regulator-name = "vcc3v3_sd";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&sdmmc_pwren>;
+	};
+
+	restart-poweroff {
+		compatible = "restart-poweroff";
+	};
+};
+
+&cpu0 {
+	cpu-supply = <&vdd_arm>;
+};
+
+&fiq_debugger {
+	rockchip,irq-mode-enable = <1>;
+	status = "okay";
 };
 
 &pinctrl {
-        sdmmc {
-                /omit-if-no-ref/
-                sdmmc_pwren: sdmmc-pwren {
-                        rockchip,pins = <0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
-                };
-        };
+	sdmmc {
+		/omit-if-no-ref/
+		sdmmc_pwren: sdmmc-pwren {
+				rockchip,pins = <3 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+	sdmmc1 {
+		/omit-if-no-ref/
+		sdmmc1m1_bus4: sdmmc1m1-bus4 {
+			rockchip,pins =
+				/* sdmmc1_d0_m1 */
+				<1 RK_PC1 5 &pcfg_pull_up_drv_level_5>,
+				/* sdmmc1_d1_m1 */
+				<1 RK_PC0 5 &pcfg_pull_up_drv_level_5>,
+				/* sdmmc1_d2_m1 */
+				<1 RK_PC5 5 &pcfg_pull_up_drv_level_5>,
+				/* sdmmc1_d3_m1 */
+				<1 RK_PC4 5 &pcfg_pull_up_drv_level_5>;
+		};
 
-	//sdio {
-        //        sdio_reset: sdio-reset {
-	//	        rockchip,pins = <3 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
-        //        };
-	//};
+		/omit-if-no-ref/
+		sdmmc1m1_clk: sdmmc1m1-clk {
+			rockchip,pins =
+				/* sdmmc1_clk_m1 */
+				<1 RK_PC2 5 &pcfg_pull_up_drv_level_5>;
+		};
+
+		/omit-if-no-ref/
+		sdmmc1m1_cmd: sdmmc1m1-cmd {
+			rockchip,pins =
+				/* sdmmc1_cmd_m1 */
+				<1 RK_PC3 5 &pcfg_pull_up_drv_level_5>;
+		};
+
+	};
 };
 
 &sdmmc {
-        vmmc-supply = <&vcc3v3_sd>;
+	max-frequency = <50000000>;
+	no-sdio;
+	no-mmc;
+	bus-width = <4>;
+	cap-mmc-highspeed;
+	cap-sd-highspeed;
+	disable-wp;
+	pinctrl-names = "normal", "idle";
+	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_det &sdmmc0_bus4>;
+	pinctrl-1 = <&sdmmc0_idle_pins &sdmmc0_det>;
+	vmmc-supply = <&vcc3v3_sd>;
+	status = "okay";
 };
 
 &u2phy {
@@ -60,6 +135,7 @@
 };
 
 &usbdrd_dwc3 {
+        extcon = <&u2phy>;
 	status = "okay";
 	dr_mode = "peripheral";
 };
@@ -67,18 +143,62 @@
 &uart5 {
         status = "okay";
         pinctrl-names = "default";
-        pinctrl-0 = <&uart5m2_xfer &uart5m2_ctsn &uart5m2_rtsn>;
+        pinctrl-0 = <&uart5m2_xfer>;
+        dma-names = "tx", "rx";
 };
 
 &sdio {
-	max-frequency = <20000000>;
-	bus-width = <4>;
-        broken-cd;
-	pinctrl-names = "default";
-	pinctrl-0 = <&sdmmc1m1_cmd &sdmmc1m1_clk &sdmmc1m1_bus4>;
 	status = "okay";
+	bus-width = <1>;
+	num-slots = <1>;
+	clock-frequency = <50000000>;
+	clock-freq-min-max = <200000 50000000>;
+	supports-highspeed;
+	supports-sdio;
+	broken-cd;
+	disable-wp;
+
+	pinctrl-names = "default", "idle";
+	pinctrl-0 = <&sdmmc1m1_cmd &sdmmc1m1_clk &sdmmc1m1_bus4>;
+	pinctrl-1 = <&sdmmc1m1_idle_pins>;
+
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	esp32@1 {
+			reg = <1>;
+			compatible = "espressif,esp32-esp-hosted";
+	};
+};
+
+&rng {
+	status = "okay";
+};
+
+&rve {
+	status = "okay";
+};
+
+&rmii_phy {
+	bgs,increment = <0>;
 };
 
 &gmac {
         status = "okay";
+};
+
+&i2c1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c1m1_xfer>;
+};
+
+&i2c3 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c3m1_xfer>;
+        tmp102: temperature-sensor@48 {
+                compatible = "ti,tmp102";
+                reg = <0x48>;
+        };
 };
