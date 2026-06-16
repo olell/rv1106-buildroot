@@ -1,9 +1,9 @@
 diff --git a/lib/tiny-printf.c b/lib/tiny-printf.c
-index ebef92fc9f..62e6381961 100644
+index 312b46a..9825bb5 100644
 --- a/lib/tiny-printf.c
 +++ b/lib/tiny-printf.c
-@@ -366,6 +366,22 @@ int sprintf(char *buf, const char *fmt, ...)
-        return ret;
+@@ -364,6 +364,22 @@ int sprintf(char *buf, const char *fmt, ...)
+ 	return info.outstr - buf;
  }
  
 +#if CONFIG_IS_ENABLED(LOG)
