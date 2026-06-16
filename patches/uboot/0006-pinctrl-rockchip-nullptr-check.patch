@@ -1,8 +1,8 @@
 diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index ee3e4f3ab5..cd3c432702 100644
+index ccee25e..6627aa8 100644
 --- a/drivers/pinctrl/pinctrl-rockchip.c
 +++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -829,7 +829,7 @@ static void rockchip_get_recalced_mux(struct rockchip_pin_bank *bank, int pin,
+@@ -874,7 +874,7 @@ static void rockchip_get_recalced_mux(struct rockchip_pin_bank *bank, int pin,
  {
  	struct rockchip_pinctrl_priv *priv = bank->priv;
  	struct rockchip_pin_ctrl *ctrl = priv->ctrl;
@@ -11,7 +11,7 @@ index ee3e4f3ab5..cd3c432702 100644
  	int i;
  
  	for (i = 0; i < ctrl->niomux_recalced; i++) {
-@@ -842,6 +842,9 @@ static void rockchip_get_recalced_mux(struct rockchip_pin_bank *bank, int pin,
+@@ -887,6 +887,9 @@ static void rockchip_get_recalced_mux(struct rockchip_pin_bank *bank, int pin,
  	if (i >= ctrl->niomux_recalced)
  		return;
  
@@ -21,7 +21,7 @@ index ee3e4f3ab5..cd3c432702 100644
  	*reg = data->reg;
  	*mask = data->mask;
  	*bit = data->bit;
-@@ -1561,7 +1564,7 @@ rockchip_get_mux_route(struct rockchip_pin_bank *bank, int pin,
+@@ -1606,7 +1609,7 @@ rockchip_get_mux_route(struct rockchip_pin_bank *bank, int pin,
  {
  	struct rockchip_pinctrl_priv *priv = bank->priv;
  	struct rockchip_pin_ctrl *ctrl = priv->ctrl;
@@ -30,7 +30,7 @@ index ee3e4f3ab5..cd3c432702 100644
  	int i;
  
  	for (i = 0; i < ctrl->niomux_routes; i++) {
-@@ -1574,6 +1577,10 @@ rockchip_get_mux_route(struct rockchip_pin_bank *bank, int pin,
+@@ -1619,6 +1622,10 @@ rockchip_get_mux_route(struct rockchip_pin_bank *bank, int pin,
  	if (i >= ctrl->niomux_routes)
  		return ROUTE_TYPE_INVALID;
  
